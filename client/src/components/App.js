@@ -1,32 +1,36 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
+import Page404 from './404';
 import Header from './partials/Header';
-import Home from './Home';
 import Footer from './partials/Footer'
-const Dashboard = () => <h2>Dashboard</h2>;
-const SurveyNew = () => <h2>SurveyNew</h2>;
-const About = () => <h2 className="slds-box">About</h2>;
+import Home from './Home';
+import About from './About';
+import Api from './api/ApiIndex';
+import CustomActivity from './customActivity/CaIndex';
+ 
 
 class App extends Component {
 componentDidMount(){
   this.props.fetchUser();
 }
 
-
-  render() {
+render() {
     return (
       <div className="ui container">
         <BrowserRouter>
           <div>
             <Header />
             <div className="slds-m-top_xx-large slds-m-horizontal_small">
-              <Route path="/" exact component={Home} />
-              <Route path="/surveys" exact component={Dashboard} />
-              <Route path="/surveys/new" component={SurveyNew} />
-              <Route path="/about" component={About} />
+              <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/api" exact component={Api} />
+                <Route path="/ca" exact component={CustomActivity} />
+                <Route path="/about" component={About} />
+                <Route component={Page404} />
+              </Switch>
             </div>
             <Footer />
           </div>
