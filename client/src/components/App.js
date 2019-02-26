@@ -37,10 +37,10 @@ render() {
                 <Route path="/api/sdk" exact component={ApiSdk} />
                 <Route path="/api/soap" exact component={ApiSoap} />
                 <Route path="/ca" exact component={CustomActivityIndex} />
-                <Route path="/ca/index"  component={CustomActivityIndex} />
-                <Route path="/ca/setup"  component={CustomActivitySetup} />
-                <Route path="/ca/list"  component={CustomActivityList} />
-                <Route path="/ca/create"  component={CustomActivityCreate} />
+                <Route path="/ca/index" component={CustomActivityIndex} />
+                <Route path="/ca/setup" component={CustomActivitySetup} />
+                <Route path="/ca/list" component={CustomActivityList} />
+                <Route path="/ca/create" component={CustomActivityCreate} />
                 <Route path="/about" component={About} />
                 <Route component={Page404} />
               </Switch>
