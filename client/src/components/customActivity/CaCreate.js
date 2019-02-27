@@ -237,10 +237,12 @@ class CaCreate extends Component {
     //e.preventDefault();
   }
 
-  onSubmit(formValues) {
+ async onSubmit(formValues) {
     console.log("submitValues: " + JSON.stringify(formValues));
-    console.log("actions: " + JSON.stringify(actions));
-    actions.createCaConfig(formValues);
+    console.log("actions: " + JSON.stringify(actions.createCaConfig));
+    //createCaConfig(formValues);
+    //actions.createCaConfig(formValues);
+     actions.fetchUser();
   }
 
   onTypeChange(event) {
@@ -288,7 +290,7 @@ class CaCreate extends Component {
             <div className="slds-size_3-of-4">
               {/* Form */}
               <form
-                onSubmit={this.props.handleSubmit(this.onSubmit)}
+                onSubmit={handleSubmit(this.onSubmit)}
                 className="slds-m-vertical_medium">
                 <div className="slds-form">
                   {/* General */}
@@ -506,6 +508,6 @@ const validate = formValues => {
 export default reduxForm({
     form: "caCreateForm",
     validate
-  })(CaCreate);
+  }) (CaCreate);
 
 
