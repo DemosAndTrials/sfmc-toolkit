@@ -11,20 +11,26 @@ export const fetchUser = () =>
         });
     };
 
-export const createCaConfig = values =>
-    async function (dispatch) {
-        console.log("createCaConfig action");
+export const createCaConfig = (values, history) => async dispatch => {
+        console.log("createCaConfig values" + JSON.stringify(values));
+        //console.log("createCaConfig history" + JSON.stringify(history));
         const res = await axios.post('/ca/create', values);
+        console.log("createCaConfig res" + JSON.stringify(res));
+
+        history.push('/ca/list');
         dispatch({
             type: FETCH_USER,
             payload: res.data
         });
     };
 
-    export const fetchCaConfigs = () => 
+export const fetchCaConfigs = () =>
     async function (dispatch) {
         console.log("fetchCaConfigs action");
         const res = await axios.get('/ca/list');
-      
-        dispatch({ type: FETCH_CA_CONFIGS, payload: res.data });
-      };
+
+        dispatch({
+            type: FETCH_CA_CONFIGS,
+            payload: res.data
+        });
+    };
