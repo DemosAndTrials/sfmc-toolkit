@@ -37,7 +37,7 @@ const CaCreateReview = ({ onCancel, formValues, createCaConfig, history }) => {
 };
 
 function mapStateToProps(state) {
-    console.log(state);
+    //console.log(state);
     return { formValues: state.form.caCreateForm.values };
   }
   

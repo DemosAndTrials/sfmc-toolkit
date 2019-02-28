@@ -3,7 +3,7 @@ import { FETCH_USER, FETCH_CA_CONFIGS } from './types';
 
 export const fetchUser = () =>
     async function (dispatch) {
-        console.log("fetchUser action");
+        //console.log("fetchUser action");
         const res = await axios.get('/api/current_user')
         dispatch({
             type: FETCH_USER,
@@ -13,7 +13,6 @@ export const fetchUser = () =>
 
 export const createCaConfig = (values, history) => async dispatch => {
         console.log("createCaConfig values" + JSON.stringify(values));
-        //console.log("createCaConfig history" + JSON.stringify(history));
         const res = await axios.post('/ca/create', values);
         console.log("createCaConfig res" + JSON.stringify(res));
 
@@ -24,11 +23,11 @@ export const createCaConfig = (values, history) => async dispatch => {
         });
     };
 
-export const fetchCaConfigs = () =>
-    async function (dispatch) {
-        console.log("fetchCaConfigs action");
+export const fetchCaConfigs = () => async dispatch => {
+        //console.log("fetchCaConfigs action");
         const res = await axios.get('/ca/list');
-
+       // console.log("fetchCaConfigs response");
+        //console.log(res.data);
         dispatch({
             type: FETCH_CA_CONFIGS,
             payload: res.data

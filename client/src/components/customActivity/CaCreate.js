@@ -1,9 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Field, FieldArray, reduxForm } from "redux-form";
-import FieldInput from "../partials/FieldInput";
-import FieldSelect from "../partials/FieldSelect";
-import * as actions from "../../actions";
+import { reduxForm } from "redux-form";
 import CaCreateReview from './CaCreateReview';
 import CaCreateForm from './CaCreateForm';
 

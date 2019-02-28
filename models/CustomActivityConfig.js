@@ -5,7 +5,7 @@ const {
 
 const customActivityConfigSchema = new Schema({
     _user: { type: Schema.Types.ObjectId, ref: 'User' },
-    id: String,
+    //id: String,
     name: String,
     key: String,
     type: String,
