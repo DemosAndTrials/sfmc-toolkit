@@ -1,37 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
-import { fetchCaConfigs } from '../../actions';
+import { fetchCaConfigs, deleteCaConfig } from '../../actions';
 
 class CaList extends Component {
   componentDidMount() {
     this.props.fetchCaConfigs();
   }
 
-  // TODO temporary example
-  renderConfigs() {
-    //console.log('renderConfigs');
-    //console.log(this.props);
-    //console.log('renderConfigs');
-    const config = {"_id": '23','name':'test'};
-    //return this.props.caConfigs.reverse().map(config => {
-      return (
-        <div className="card darken-1" key={config._id}>
-          <div className="card-content">
-            <span className="card-title">{config.name}</span>
-            <p>
-              {JSON.stringify(config)}
-            </p>
-          </div>
-        </div>
-      );
-    //});
+  // Delete config
+  deleteConfig(config) {
+    this.props.deleteCaConfig(config._id);
+    this.props.caConfigs.splice(this.props.caConfigs.indexOf(config), 1)
+    this.setState({}); // TODO ?!
   }
 
   // Render configs table
   renderTable() {
-    //console.log('renderTable');
-    console.log(this.props);
     return (
       <table className="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal slds-table_striped">
         <thead>
@@ -71,7 +56,7 @@ class CaList extends Component {
           </tr>
         </thead>
         <tbody>
-        {this.props.caConfigs.map((config, index) => (
+        {this.props.caConfigs && this.props.caConfigs.map((config, index) => (
           <tr key={`config_${index}`}>
             <th scope="row" data-label="Id">
               <div className="slds-truncate" title="Id">
@@ -132,7 +117,7 @@ class CaList extends Component {
             </td>
             <td data-label="Delete">
               <button id={`deleteBtn_${config._id}`} name={config._id} className="slds-button slds-button_icon slds-button_icon-border slds-button_icon-error"
-                aria-pressed="false" title="Delete">
+                aria-pressed="false" title="Delete" onClick={() => this.deleteConfig(config) }>
                 <svg className="slds-button__icon" aria-hidden="true">
                   <use href="/assets/icons/utility-sprite/svg/symbols.svg#delete"></use>
                 </svg>
@@ -140,23 +125,6 @@ class CaList extends Component {
               </button>
             </td>
           </tr>
-
-
-                    // <div key={index} >
-                    //     <div className="slds-grid slds-gutters slds-m-bottom_xx-small">
-                    //         <div className="slds-col slds-size_1-of-2">
-                    //             <Field name={`${step}.label`} component={this.renderInput} placeholder="label" />
-                    //         </div>
-                    //         <div className="slds-col slds-size_1-of-2">
-                    //             <Field name={`${step}.value`} component={this.renderInput} placeholder="value" />
-                    //         </div>
-                    //     </div>
-
-                    //     {/* {error && <li className="error">{error}</li>} */}
-                    //     <div className="slds-text-color_error">
-                    //         {error}
-                    //     </div>
-                    // </div>
         ))}
 
       </tbody>
@@ -165,6 +133,7 @@ class CaList extends Component {
   }
 
   render() {
+    console.log('render calist');
   return (
     <div>
       {/* Title */}
@@ -192,7 +161,6 @@ class CaList extends Component {
 
       {/* Content */}
       <div className="slds-m-around_small slds-m-top_medium">
-        {/* {this.renderConfigs()} */}
         {this.renderTable()}
       </div>
     </div>
@@ -202,9 +170,12 @@ class CaList extends Component {
 
 // accept state object
 function mapStateToProps({ caConfigs }) {
-  //console.log("configs");
-  //console.log(caConfigs);
   return { caConfigs };
 }
 
-export default connect(mapStateToProps, {fetchCaConfigs})(CaList);
+const mapDispatchToProps = {
+  fetchCaConfigs, // will be wrapped into a dispatch call
+  deleteCaConfig, // will be wrapped into a dispatch call
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CaList);
