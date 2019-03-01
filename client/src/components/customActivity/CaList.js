@@ -2,17 +2,38 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { fetchCaConfigs, deleteCaConfig } from '../../actions';
+import Modal from '../partials/Modal';
 
 class CaList extends Component {
+  constructor(props) {
+    super(props);
+    // set initial state for modal
+    this.state = { isOpen: false };
+  }
+
   componentDidMount() {
     this.props.fetchCaConfigs();
   }
 
+  toggleModal = () => {
+    this.setState({ isOpen: !this.state.isOpen });
+  }
+
+  confirmDelete = () => {
+    const config = this.state.configToDelete;
+    console.log('confirm delete ' + JSON.stringify(config));
+    if (config) {
+      this.props.caConfigs.splice(this.props.caConfigs.indexOf(config), 1)
+      this.props.deleteCaConfig(config._id);
+    }
+    this.setState({ isOpen: false });
+  }
+
   // Delete config
   deleteConfig(config) {
-    this.props.deleteCaConfig(config._id);
-    this.props.caConfigs.splice(this.props.caConfigs.indexOf(config), 1)
-    this.setState({}); // TODO ?!
+    // open modal
+    this.toggleModal();
+    this.setState({ configToDelete: config });
   }
 
   // Render configs table
@@ -134,6 +155,7 @@ class CaList extends Component {
 
   render() {
     console.log('render calist');
+    //this.state = { isOpen: false };
   return (
     <div>
       {/* Title */}
@@ -163,6 +185,17 @@ class CaList extends Component {
       <div className="slds-m-around_small slds-m-top_medium">
         {this.renderTable()}
       </div>
+      {/* Modal */}
+      <Modal show={this.state.isOpen}
+          title="Confirmation"
+          button1Text='Cancel'
+          button2Text='Delete'
+          onCloseClick={this.toggleModal} 
+          onButton1Click={this.toggleModal} 
+          onButton2Click={this.confirmDelete}>
+          Are you sure?
+      </Modal>
+
     </div>
   );
   }

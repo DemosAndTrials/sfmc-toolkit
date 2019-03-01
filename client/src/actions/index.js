@@ -30,7 +30,7 @@ export const fetchCaConfigs = () => async dispatch => {
     };
 
     export const deleteCaConfig = (id) => async dispatch => {
-        const res = await axios.post('/ca/delete/'+id);
+        const res = await axios.post('/ca/delete/' + id);
         dispatch({
             type: CA_CONFIGS,
             payload: res.data
