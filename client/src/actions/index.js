@@ -4,7 +4,7 @@ import { FETCH_USER, FETCH_CA_CONFIGS, CA_CONFIGS } from './types';
 export const fetchUser = () =>
     async function (dispatch) {
         //console.log("fetchUser action");
-        const res = await axios.get('/api/current_user')
+        const res = await axios.get('/auth/current_user')
         dispatch({
             type: FETCH_USER,
             payload: res.data
