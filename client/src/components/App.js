@@ -12,7 +12,10 @@ import ApiIndex from './api/ApiIndex';
 import ApiRest from './api/ApiRest';
 import ApiSdk from './api/ApiSdk';
 import ApiSoap from './api/ApiSoap';
-import CustomActivity from './customActivity/CaIndex';
+import CustomActivityIndex from './customActivity/CaIndex';
+import CustomActivitySetup from './customActivity/CaSetup';
+import CustomActivityList from './customActivity/CaList';
+import CustomActivityCreate from './customActivity/CaCreate';
  
 
 class App extends Component {
@@ -33,7 +36,11 @@ render() {
                 <Route path="/api/rest" exact component={ApiRest} />
                 <Route path="/api/sdk" exact component={ApiSdk} />
                 <Route path="/api/soap" exact component={ApiSoap} />
-                <Route path="/ca" exact component={CustomActivity} />
+                <Route path="/ca" exact component={CustomActivityIndex} />
+                <Route path="/ca/index" component={CustomActivityIndex} />
+                <Route path="/ca/setup" component={CustomActivitySetup} />
+                <Route path="/ca/list" component={CustomActivityList} />
+                <Route path="/ca/create" component={CustomActivityCreate} />
                 <Route path="/about" component={About} />
                 <Route component={Page404} />
               </Switch>
