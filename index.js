@@ -6,12 +6,18 @@ const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 require('./models/User');
 require('./models/CustomActivityConfig');
-require('./services/passport');
+
+//import strategies
+require('./services/passportGoogle')(passport)
+require('./services/passportFacebook')(passport)
+require('./services/passportLocal')(passport)
 
 mangoose.connect(keys.mongoUri);
 
 const app = express();
 
+// Middleware
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
 app.use(cookieSession({
     maxAge: 30*24*60*60*1000,

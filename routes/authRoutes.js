@@ -1,27 +1,101 @@
 const passport = require('passport');
+const gravatar = require('gravatar');
+
+const User = require('../models/User');
+const validateRegisterInput = require('../validation/register')
 
 module.exports = app => {
-  app.get(
-    '/auth/google',
-    passport.authenticate('google', {
-      scope: ['profile', 'email']
+
+  // @route  GET /api/users/user
+  // @desc   get the user data
+  // @access private
+  app.get('/api/users/user', (req, res) => {
+    res.send(req.user)
+  })
+
+  // @route  GET /api/users/logout
+  // @desc   Log Out from oauth session
+  // @access private
+  app.get('/api/users/logout', (req, res) => {
+    req.logout()
+    res.json({
+      session: 'logout'
     })
-  );
+  })
 
-  app.get(
-    '/auth/google/callback',
-    passport.authenticate('google'),
-    (req, res) => {
-      res.redirect('/');
-    }
-  );
+  // @route  GET /api/users/Login
+  // @desc   Login from local session
+  // @access public
+  app.post('/api/users/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+  }))
 
-  app.get('/auth/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
-  });
+  // @route  GET auth/google
+  // @desc   Register user with google Oauth
+  // @access Public
+  app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+  }))
 
-  app.get('/auth/current_user', (req, res) => {
-    res.send(req.user);
-  });
+  // @route  GET auth/google
+  // @desc   Login user with google Oauth
+  // @access Private
+  app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
+    res.redirect('/')
+  })
+
+  // @route  GET auth/facebook
+  // @desc   Register user with google Oauth
+  // @access Public
+  app.get('/auth/facebook', passport.authenticate('facebook', {
+    scope: ['email']
+  }))
+
+  // @route  GET auth/facebook
+  // @desc   Login user with google Oauth
+  // @access Private
+  app.get('/auth/facebook/callback', passport.authenticate('facebook'), (req, res) => {
+    res.redirect('/')
+  })
+
+  // @route  Post /api/users/register
+  // @desc   register users localy
+  // @access public
+  app.post('/api/users/register', (req, res) => {
+    const {
+      errors,
+      isValid
+    } = validateRegisterInput(req.body)
+      //Check Validation
+      !isValid && res.status(400).json(errors)
+    //Check if user exist, then create
+    User.findOne({
+        email: req.body.email
+      })
+      .then(user => {
+        if (user) {
+          errors.email = 'Email already exists'
+          return res.status(400).json(errors)
+        } else {
+          const avatar = gravatar.url(req.body.email, {
+            s: '200', // Size
+            r: 'pg', // Rating
+            d: 'mm', // Default
+          })
+
+          const newUser = new User({
+            name: req.body.name,
+            email: req.body.email,
+            avatar,
+            password: req.body.password
+          })
+          newUser
+            .save()
+            .then(user => res.json(user))
+            .catch(err => console.log(err))
+        }
+      })
+  })
+
 };

@@ -8,6 +8,8 @@ import Header from './partials/Header';
 import Footer from './partials/Footer'
 import Home from './Home';
 import About from './About';
+import Login from './user/Login';
+import Register from './user/Register';
 import ApiIndex from './api/ApiIndex';
 import ApiRest from './api/ApiRest';
 import ApiSdk from './api/ApiSdk';
@@ -32,6 +34,9 @@ render() {
             <div className="slds-m-top_xx-large slds-m-horizontal_small">
               <Switch>
                 <Route path="/" exact component={Home} />
+                <Route exact path='/login' component={Login}/>
+                <Route exact path='/register' component={Register}/>
+
                 <Route path="/api" exact component={ApiIndex} />
                 <Route path="/api/rest" exact component={ApiRest} />
                 <Route path="/api/sdk" exact component={ApiSdk} />
