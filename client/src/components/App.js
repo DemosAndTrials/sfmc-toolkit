@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { connect } from 'react-redux';
-import * as actions from '../actions';
+import * as actions from '../actions/authActions';
 
 import Page404 from './404';
 import Header from './partials/Header';
@@ -10,6 +10,7 @@ import Home from './Home';
 import About from './About';
 import Login from './user/Login';
 import Register from './user/Register';
+import UserProfile from './user/Profile';
 import ApiIndex from './api/ApiIndex';
 import ApiRest from './api/ApiRest';
 import ApiSdk from './api/ApiSdk';
@@ -36,6 +37,7 @@ render() {
                 <Route path="/" exact component={Home} />
                 <Route exact path='/login' component={Login}/>
                 <Route exact path='/register' component={Register}/>
+                <Route exact path='/profile' component={UserProfile}/>
 
                 <Route path="/api" exact component={ApiIndex} />
                 <Route path="/api/rest" exact component={ApiRest} />
