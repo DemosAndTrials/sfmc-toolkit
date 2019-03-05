@@ -83,7 +83,7 @@ class Header extends Component{
 
     const guestLinks = (
       <Fragment>
-        <Link to='/register'>Register</Link>
+        <Link to='/register' className="slds-m-right_small">Register</Link>
         <Link to='/login'>Sign-In</Link>
       </Fragment>
     )
