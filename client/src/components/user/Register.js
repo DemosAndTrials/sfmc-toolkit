@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import { Field, reduxForm } from "redux-form";
 import { registerUser } from '../../actions/authActions';
-import InputGroup from '../partials/InputGroup';
+import FieldInput from "../partials/FieldInput";
 import Title from "../partials/Title";
+import isEmpty from '../../utils/isEmpty';
+import Validator from 'validator';
 
 class Register extends React.Component {
   constructor(props) {
@@ -17,8 +19,6 @@ class Register extends React.Component {
       password2: '',
       errors: {},
     }
-    this.handleQueryInput = this.handleQueryInput.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentDidMount() {
@@ -34,13 +34,12 @@ class Register extends React.Component {
     }
   }
 
-  handleSubmit(e) {
-    e.preventDefault()
+  handleSubmit(values) {
     const newUser = {
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password,
-      password2: this.state.password2,
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      password2: values.password2,
     }
     this.props.registerUser(
       newUser,
@@ -48,13 +47,8 @@ class Register extends React.Component {
     )
   }
 
-  handleQueryInput(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
   render() {
-    const { name, email, password, password2, errors } = this.state
+    const { errors } = this.state
     return (
       <div>
          <Title text="Register in the application" />
@@ -78,33 +72,28 @@ class Register extends React.Component {
             </div>
             <form
               className='slds-m-around_small'
-              action="/api/users/login"
-              method="post">
-
-              <div className="slds-form-element">
-                <label className="slds-form-element__label" htmlFor="email">Username</label>
-                <div className="slds-form-element__control">
-                  <input type="name" name="name" className="slds-input" placeholder='Your name' />
-                </div>
-              </div>
-              <div className="slds-form-element">
-                <label className="slds-form-element__label" htmlFor="email">Email</label>
-                <div className="slds-form-element__control">
-                  <input type="email" name="email" className="slds-input" placeholder='Your Email'/>
-                </div>
-              </div>
-              <div className="slds-form-element">
-                <label className="slds-form-element__label" htmlFor="password">Password</label>
-                <div className="slds-form-element__control">
-                  <input type="password" name="password" className="slds-input" placeholder='Required Password'/>
-                </div>
-              </div>
-              <div className="slds-form-element">
-                <label className="slds-form-element__label" htmlFor="password">Confirm</label>
-                <div className="slds-form-element__control">
-                  <input type="password" name="password2" className="slds-input" placeholder='Confirm your Password'/>
-                </div>
-              </div>
+              onSubmit={this.props.handleSubmit(this.handleSubmit.bind(this))}>
+              <Field
+                name="name"
+                component={FieldInput}
+                maxLength="100"
+                label="Username" error={errors.name}/>
+              <Field
+                name="email"
+                component={FieldInput}
+                maxLength="100"
+                label="Email" error={errors.email}/>
+             <Field
+                name="password"
+                component={FieldInput}
+                maxLength="100" type='password'
+                label="Password" error={errors.password}/>
+               <Field
+                name="password2"
+                component={FieldInput}
+                maxLength="100" type='password'
+                label="Confirm"  error={errors.password2}/>
+             
               <div className="slds-form-element">
                 <button className="slds-button slds-button_brand" type="Submit">Register</button>
               </div>
@@ -122,9 +111,65 @@ class Register extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-  errors: state.errors,
-})
+// validate
+function validate(formValues) {
+  const errors = {};
 
-export default withRouter(connect(mapStateToProps, { registerUser })(Register))
+  formValues.name = !isEmpty(formValues.name) ? formValues.name : ''
+  formValues.email = !isEmpty(formValues.email) ? formValues.email : ''
+  formValues.password = !isEmpty(formValues.password) ? formValues.password : ''
+  formValues.password2 = !isEmpty(formValues.password2) ? formValues.password2 : ''
+
+  if (!Validator.isLength(formValues.name, { min: 2, max: 30 })) {
+    errors.name = 'Name must be between 2 and 30 characters'
+  }
+
+  if (!Validator.isEmail(formValues.email)) {
+    errors.email = 'Email is invalid'
+  }
+
+  if (!Validator.isLength(formValues.password , { min: 6, max: 30 })) {
+    errors.password = 'Password must be at least 6 characters'
+  }
+
+  if (!Validator.equals(formValues.password, formValues.password2 )) {
+    errors.password2 = 'Passwords must match'
+  }
+
+  if (Validator.isEmpty(formValues.password2)) {
+    errors.password2 = 'Confirm Password field is required'
+  }
+
+  if (Validator.isEmpty(formValues.name)) {
+    errors.name = 'Name field is required'
+  }
+
+  if (Validator.isEmpty(formValues.email)) {
+    errors.email = 'Email field is required'
+  }
+
+  if (Validator.isEmpty(formValues.password)) {
+    errors.password = 'Password field is required'
+  }
+ 
+  return errors;
+}
+
+const mapDispatchToProps = {
+  registerUser, // will be wrapped into a dispatch call
+}
+
+function mapStateToProps(state) {
+  //console.log("mapStateToProps: " + JSON.stringify(state));
+  return ({
+      auth: state.auth,
+      errors: state.errors,
+      registerUser
+    });
+}
+
+export default reduxForm({
+  validate,
+  form: 'userRegisterForm'
+})(connect(mapStateToProps, mapDispatchToProps)(withRouter(Register)));
+

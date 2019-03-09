@@ -1,22 +1,11 @@
 import { FETCH_USER, USER_LOGOUT, LOADING_DATA, CLEAR_LOADING_DATA } from '../actions/types'
 import isEmpty from '../utils/isEmpty'
 
-
-
 const initialState = {
   isAuthenticated: false,
   user: {},
   loading: false,
 }
-
-// export default function (state = null, action) {
-//   switch (action.type) {
-//     case FETCH_USER:
-//       return action.payload || false;
-//     default:
-//       return state;
-//   }
-// }
 
 export default function authReducer (state = initialState, action) {
   switch(action.type) {

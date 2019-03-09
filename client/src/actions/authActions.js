@@ -30,13 +30,15 @@ export const logOut = () => async dispatch => {
 }
 
 export const registerUser = (userData, history) => async dispatch => {
-  axios
-    .post('/api/users/register', userData)
-    .then(res => history.push('/login'))
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      })
-    )
+  try {
+    const res = await axios.post('/api/users/register', userData)
+    console.log('new user response: ' + JSON.stringify(res.data));
+    history.push('/login');
+  } catch (err) {
+    console.log(err);
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data,
+    })
+  }
 }

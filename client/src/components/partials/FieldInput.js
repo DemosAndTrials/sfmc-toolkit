@@ -1,16 +1,16 @@
 import React from "react";
 
-export default ({ input, label, maxLength, placeholder, disabled, meta }) => {
+export default ({ input, label, maxLength, placeholder, disabled, meta, error, type }) => {
 
     const className = `slds-form-element slds-form-element_stacked ${
-        meta.error && meta.touched ? "slds-has-error" : ""
+      (meta.error || error) && meta.touched ? "slds-has-error" : ""
       }`;
 
-      const renderError = ({ error, touched }) => {
-        if (touched && error) {
+      const renderError = () => {
+        if (meta.touched && (meta.error || error)) {
           return (
             <div className="slds-form-element__help">
-              {error}
+              {meta.error}{error}
             </div>
           );
         }
@@ -24,7 +24,7 @@ export default ({ input, label, maxLength, placeholder, disabled, meta }) => {
           <div className="slds-form-element__control">
             <input
               {...input}
-              type="text"
+              type={type || "text"}
               id={input.name}
               className="slds-input"
               maxLength={maxLength}
@@ -32,7 +32,7 @@ export default ({ input, label, maxLength, placeholder, disabled, meta }) => {
               disabled={disabled}
             />
           </div>
-          {renderError(meta)}
+          {renderError()}
         </div>
       );
   };
